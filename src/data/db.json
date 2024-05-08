@@ -1,0 +1,14 @@
+{
+  "sensors": [
+    {
+      "id": 1,
+      "name": "Sensor 1",
+      "createdBy": "User 1",
+      "updatedBy": "User 1",
+      "createdAt": "2022-01-01T00:00:00Z",
+      "updatedAt": "2022-01-01T00:00:00Z",
+      "latitude": 51.509865,
+      "longitude": -0.118092
+    }
+  ]
+}
