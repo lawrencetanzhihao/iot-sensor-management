@@ -8,6 +8,25 @@ const SensorConfig = () => {
   const [sensors, setSensors] = useState([]);
   const [newSensor, setNewSensor] = useState({ name: "", id: "" });
   const [editingSensor, setEditingSensor] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 10;
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/sensors")
+      .then((response) => {
+        setSensors(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching sensors: ", error);
+      });
+  }, []);
+
+  // Calculate the range of sensors for the current page
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, sensors.length);
+  const currentSensors = sensors.slice(startIndex, endIndex);
 
   useEffect(() => {
     axios.get("http://localhost:3001/sensors").then((response) => {
@@ -142,7 +161,7 @@ const SensorConfig = () => {
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: sensors });
+    useTable({ columns, data: currentSensors });
 
   return (
     <div>
@@ -243,6 +262,20 @@ const SensorConfig = () => {
           })}
         </tbody>
       </table>
+
+      {/* Render the pagination controls */}
+      <button
+        onClick={() => setCurrentPage(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </button>
+      <button
+        onClick={() => setCurrentPage(currentPage + 1)}
+        disabled={currentPage * pageSize >= sensors.length}
+      >
+        Next
+      </button>
     </div>
   );
 };
