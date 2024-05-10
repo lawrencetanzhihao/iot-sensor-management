@@ -27,19 +27,43 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
         </label>
         <label>
           Created By:
-          <input type="text" name="createdBy" required />
+          <input
+            type="text"
+            name="createdBy"
+            value={newSensor.createdBy}
+            onChange={handleInputChange}
+            required
+          />
         </label>
         <label>
           Updated By:
-          <input type="text" name="updatedBy" required />
+          <input
+            type="text"
+            name="updatedBy"
+            value={newSensor.updatedBy}
+            onChange={handleInputChange}
+            required
+          />
         </label>
         <label>
           Latitude:
-          <input type="number" name="latitude" required />
+          <input
+            type="number"
+            name="latitude"
+            value={newSensor.latitude}
+            onChange={handleInputChange}
+            required
+          />
         </label>
         <label>
           Longitude:
-          <input type="number" name="longitude" required />
+          <input
+            type="number"
+            name="longitude"
+            value={newSensor.longitude}
+            onChange={handleInputChange}
+            required
+          />
         </label>
         <button type="submit">Add Sensor</button>
       </form>

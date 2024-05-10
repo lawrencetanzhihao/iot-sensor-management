@@ -9,9 +9,27 @@ const SensorConfig = () => {
   // Need to fetch the sensor data from our mock API, will use the useEffect hook to fetch the data when the component mounts
   // useState hook to store the data
   const [sensors, setSensors] = useState([]);
-  const [newSensor, setNewSensor] = useState({ name: "", id: "" });
+  const [newSensor, setNewSensor] = useState({
+    name: "",
+    id: "",
+    createdBy: "",
+    updatedBy: "",
+    latitude: "",
+    longitude: "",
+  });
   const [editingSensor, setEditingSensor] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [originalSensors, setOriginalSensors] = useState([]);
+  const [filteredSensors, setFilteredSensors] = useState([]);
+
+  // When fetching data from the server, set both originalSensors and filteredSensors
+  useEffect(() => {
+    axios.get("http://localhost:3001/sensors").then((response) => {
+      setOriginalSensors(response.data);
+      setFilteredSensors(response.data);
+    });
+  }, []);
 
   const pageSize = 10;
 
@@ -26,16 +44,29 @@ const SensorConfig = () => {
       });
   }, []);
 
+  useEffect(() => {
+    const lowerCasedSearchTerm = searchTerm.toLowerCase();
+
+    const newFilteredSensors = originalSensors.filter((sensor) => {
+      return (
+        sensor.name.toLowerCase().includes(lowerCasedSearchTerm) ||
+        sensor.id.toLowerCase().includes(lowerCasedSearchTerm) ||
+        new Date(sensor.createTimestamp)
+          .toLocaleString()
+          .includes(lowerCasedSearchTerm) ||
+        new Date(sensor.updateTimestamp)
+          .toLocaleString()
+          .includes(lowerCasedSearchTerm)
+      );
+    });
+
+    setFilteredSensors(newFilteredSensors);
+  }, [searchTerm, originalSensors]);
+
   // Calculate the range of sensors for the current page
   const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, sensors.length);
-  const currentSensors = sensors.slice(startIndex, endIndex);
-
-  useEffect(() => {
-    axios.get("http://localhost:3001/sensors").then((response) => {
-      setSensors(response.data);
-    });
-  }, []);
+  const endIndex = Math.min(startIndex + pageSize, filteredSensors.length);
+  const currentSensors = filteredSensors.slice(startIndex, endIndex);
 
   const handleInputChange = (event) => {
     setNewSensor({ ...newSensor, [event.target.name]: event.target.value });
@@ -59,7 +90,20 @@ const SensorConfig = () => {
     axios
       .post("http://localhost:3001/sensors", newSensor)
       .then((response) => {
-        setSensors([...sensors, response.data]);
+        const newSensorList = [...sensors, response.data];
+        setSensors(newSensorList);
+        setFilteredSensors(newSensorList);
+        // Clear the input fields
+        setNewSensor({
+          name: "",
+          id: "",
+          createdBy: "",
+          updatedBy: "",
+          createTimestamp: "",
+          updateTimestamp: "",
+          latitude: "",
+          longitude: "",
+        });
       })
       .catch((error) => {
         console.error("Error adding sensor: ", error);
@@ -85,6 +129,8 @@ const SensorConfig = () => {
         setEditingSensor(null);
         axios.get("http://localhost:3001/sensors").then((response) => {
           setSensors(response.data);
+          setOriginalSensors(response.data);
+          setFilteredSensors(response.data);
         });
       })
       .catch((error) => {
@@ -102,11 +148,17 @@ const SensorConfig = () => {
         // Refresh the sensor list after a sensor is deleted
         axios.get("http://localhost:3001/sensors").then((response) => {
           setSensors(response.data);
+          setOriginalSensors(response.data);
+          setFilteredSensors(response.data);
         });
       })
       .catch((error) => {
         console.error(`Error deleting sensor with ID ${id}: `, error);
       });
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const columns = React.useMemo(
@@ -130,10 +182,12 @@ const SensorConfig = () => {
       {
         Header: "Create Timestamp",
         accessor: "createTimestamp",
+        Cell: ({ value }) => new Date(value).toLocaleString(),
       },
       {
         Header: "Update Timestamp",
         accessor: "updateTimestamp",
+        Cell: ({ value }) => new Date(value).toLocaleString(),
       },
       {
         Header: "Latitude",
@@ -166,6 +220,7 @@ const SensorConfig = () => {
   return (
     <div>
       <h1>Sensor Configurations</h1>
+      <input type="text" value={searchTerm} onChange={handleSearchChange} />
       <SensorForm
         newSensor={newSensor}
         handleInputChange={handleInputChange}
@@ -186,7 +241,7 @@ const SensorConfig = () => {
       />
       <Pagination
         currentPage={currentPage}
-        totalPages={Math.ceil(sensors.length / pageSize)}
+        totalPages={Math.ceil(filteredSensors.length / pageSize)}
         handlePreviousClick={() => setCurrentPage(currentPage - 1)}
         handleNextClick={() => setCurrentPage(currentPage + 1)}
       />
