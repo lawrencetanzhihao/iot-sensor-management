@@ -1,6 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useTable } from "react-table";
+import SensorForm from "./SensorForm";
+import EditSensorForm from "./EditSensorForm";
+import SensorTable from "./SensorTable";
+import Pagination from "./Pagination";
 
 const SensorConfig = () => {
   // Need to fetch the sensor data from our mock API, will use the useEffect hook to fetch the data when the component mounts
@@ -42,14 +45,14 @@ const SensorConfig = () => {
     event.preventDefault();
 
     const newSensor = {
-      id: event.target.id.value,
-      name: event.target.name.value,
-      createdBy: event.target.createdBy.value,
-      updatedBy: event.target.updatedBy.value,
+      id: event.target.elements.id.value,
+      name: event.target.elements.name.value,
+      createdBy: event.target.elements.createdBy.value,
+      updatedBy: event.target.elements.updatedBy.value,
       createTimestamp: new Date().toISOString(),
       updateTimestamp: new Date().toISOString(),
-      latitude: event.target.latitude.value,
-      longitude: event.target.longitude.value,
+      latitude: event.target.elements.latitude.value,
+      longitude: event.target.elements.longitude.value,
     };
 
     // Add the new sensor to the list of sensors
@@ -160,122 +163,33 @@ const SensorConfig = () => {
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: currentSensors });
-
   return (
     <div>
       <h1>Sensor Configurations</h1>
-      {/* Sensor configurations will go here */}
-
-      {/* Add a form to add a new sensor */}
-      <form onSubmit={handleAddSensor}>
-        <label>
-          Sensor Name:
-          <input
-            type="text"
-            name="name"
-            value={newSensor.name}
-            onChange={handleInputChange}
-            required
-          />
-        </label>
-        <label>
-          Sensor ID:
-          <input
-            type="text"
-            name="id"
-            value={newSensor.id}
-            onChange={handleInputChange}
-            required
-          />
-        </label>
-        <label>
-          Created By:
-          <input type="text" name="createdBy" required />
-        </label>
-        <label>
-          Updated By:
-          <input type="text" name="updatedBy" required />
-        </label>
-        <label>
-          Latitude:
-          <input type="number" name="latitude" required />
-        </label>
-        <label>
-          Longitude:
-          <input type="number" name="longitude" required />
-        </label>
-        <button type="submit">Add Sensor</button>
-      </form>
-
-      {/* Add a form to edit a sensor */}
+      <SensorForm
+        newSensor={newSensor}
+        handleInputChange={handleInputChange}
+        handleAddSensor={handleAddSensor}
+      />
       {editingSensor && (
-        <form onSubmit={handleEditFormSubmit}>
-          <label>
-            Sensor Name:
-            <input
-              type="text"
-              name="name"
-              value={editingSensor.name}
-              onChange={handleEditInputChange}
-              required
-            />
-          </label>
-          <label>
-            Sensor ID:
-            <input
-              type="text"
-              name="id"
-              value={editingSensor.id}
-              onChange={handleEditInputChange}
-              required
-            />
-          </label>
-          <button type="submit">Update Sensor</button>
-        </form>
+        <EditSensorForm
+          editingSensor={editingSensor}
+          handleEditInputChange={handleEditInputChange}
+          handleEditFormSubmit={handleEditFormSubmit}
+        />
       )}
-
-      {/* Display sensor data */}
-      {/* This code will display a table with the sensor data fetched from the mock API */}
-      {/* The table will have columns for the sensor name and ID, and a row for each sensor */}
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      {/* Render the pagination controls */}
-      <button
-        onClick={() => setCurrentPage(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        Previous
-      </button>
-      <button
-        onClick={() => setCurrentPage(currentPage + 1)}
-        disabled={currentPage * pageSize >= sensors.length}
-      >
-        Next
-      </button>
+      <SensorTable
+        columns={columns}
+        data={currentSensors}
+        handleEditButtonClick={handleEditButtonClick}
+        handleDeleteButtonClick={handleDeleteButtonClick}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(sensors.length / pageSize)}
+        handlePreviousClick={() => setCurrentPage(currentPage - 1)}
+        handleNextClick={() => setCurrentPage(currentPage + 1)}
+      />
     </div>
   );
 };
