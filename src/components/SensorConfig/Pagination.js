@@ -1,4 +1,5 @@
 import React from "react";
+import { Pagination as BootstrapPagination } from "react-bootstrap";
 
 const Pagination = ({
   currentPage,
@@ -9,20 +10,21 @@ const Pagination = ({
   return (
     <div>
       {/* Render the pagination controls */}
-      <button onClick={handlePreviousClick} disabled={currentPage === 1}>
-        Previous
-      </button>
-      {totalPages > 0 && (
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-      )}
-      <button
-        onClick={handleNextClick}
-        disabled={currentPage === totalPages || totalPages === 0}
-      >
-        Next
-      </button>
+      <BootstrapPagination>
+        <BootstrapPagination.Prev
+          onClick={handlePreviousClick}
+          disabled={currentPage === 1}
+        />
+        {totalPages > 0 && (
+          <BootstrapPagination.Item active>
+            {currentPage}
+          </BootstrapPagination.Item>
+        )}
+        <BootstrapPagination.Next
+          onClick={handleNextClick}
+          disabled={currentPage === totalPages || totalPages === 0}
+        />
+      </BootstrapPagination>
     </div>
   );
 };

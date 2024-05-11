@@ -2,70 +2,77 @@ import React from "react";
 
 const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
   return (
-    <div>
-      {/* Add a form to add a new sensor */}
+    <div className="container mt-5">
       <form onSubmit={handleAddSensor}>
-        <label>
-          Sensor Name:
+        <div className="mb-3">
+          <label className="form-label">Sensor Name:</label>
           <input
             type="text"
             name="name"
             value={newSensor.name}
             onChange={handleInputChange}
             required
+            className="form-control"
           />
-        </label>
-        <label>
-          Sensor ID:
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Sensor ID:</label>
           <input
             type="text"
             name="id"
             value={newSensor.id}
             onChange={handleInputChange}
             required
+            className="form-control"
           />
-        </label>
-        <label>
-          Created By:
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Created By:</label>
           <input
             type="text"
             name="createdBy"
             value={newSensor.createdBy}
             onChange={handleInputChange}
             required
+            className="form-control"
           />
-        </label>
-        <label>
-          Updated By:
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Updated By:</label>
           <input
             type="text"
             name="updatedBy"
             value={newSensor.updatedBy}
             onChange={handleInputChange}
             required
+            className="form-control"
           />
-        </label>
-        <label>
-          Latitude:
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Latitude:</label>
           <input
             type="number"
             name="latitude"
             value={newSensor.latitude}
             onChange={handleInputChange}
             required
+            className="form-control"
           />
-        </label>
-        <label>
-          Longitude:
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Longitude:</label>
           <input
             type="number"
             name="longitude"
             value={newSensor.longitude}
             onChange={handleInputChange}
             required
+            className="form-control"
           />
-        </label>
-        <button type="submit">Add Sensor</button>
+        </div>
+        <button type="submit" className=" btn btn-success">
+          Add Sensor
+        </button>
       </form>
     </div>
   );

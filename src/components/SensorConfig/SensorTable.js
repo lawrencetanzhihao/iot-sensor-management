@@ -1,5 +1,6 @@
 import React from "react";
 import { useTable } from "react-table";
+import { Table } from "react-bootstrap";
 
 const SensorTable = ({
   columns,
@@ -16,7 +17,7 @@ const SensorTable = ({
       {/* This code will display a table with the sensor data fetched from the mock API */}
       {/* The table will have columns for the sensor name and ID, and a row for each sensor */}
       <div>
-        <table {...getTableProps()}>
+        <Table striped bordered hover {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => {
               const { key, ...props } = headerGroup.getHeaderGroupProps();
@@ -52,7 +53,7 @@ const SensorTable = ({
               );
             })}
           </tbody>
-        </table>
+        </Table>
       </div>
     </div>
   );

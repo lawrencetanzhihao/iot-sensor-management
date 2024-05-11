@@ -1,5 +1,6 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Button, Container, Form, InputGroup, Table } from "react-bootstrap";
+import axios from "axios";
 import SensorForm from "./SensorForm";
 import EditSensorForm from "./EditSensorForm";
 import SensorTable from "./SensorTable";
@@ -22,6 +23,8 @@ const SensorConfig = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [originalSensors, setOriginalSensors] = useState([]);
   const [filteredSensors, setFilteredSensors] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
 
   // When fetching data from the server, set both originalSensors and filteredSensors
   useEffect(() => {
@@ -102,10 +105,14 @@ const SensorConfig = () => {
       .catch((error) => {
         console.error("Error adding sensor: ", error);
       });
+
+    // After adding a new sensor, switch back to the table view
+    setShowForm(false);
   };
 
   const handleEditButtonClick = (sensor) => {
     setEditingSensor(sensor);
+    setShowEditForm(true);
   };
 
   const handleEditInputChange = (event) => {
@@ -127,28 +134,47 @@ const SensorConfig = () => {
     // Display updated sensor data in the form without making an additional API call
     axios
       .put(`http://localhost:3001/sensors/${updatedSensor.id}`, updatedSensor)
-      .then(() => {
-        // Find the index of the edited sensor in the sensors array
-        const index = sensors.findIndex(
-          (sensor) => sensor.id === updatedSensor.id
-        );
+      .then((response) => {
+        // The response from the server after the update should contain the updated sensor data
+        const updatedSensorFromServer = response.data;
 
-        // Create a new array with the updated sensor
-        const newSensors = [...sensors];
-        newSensors[index] = updatedSensor;
+        // Update the states using a functional update
+        setSensors((prevSensors) => {
+          // Find the index of the edited sensor in the previous sensors array
+          const index = prevSensors.findIndex(
+            (sensor) => sensor.id === updatedSensorFromServer.id
+          );
 
-        // Update the states
-        setSensors(newSensors);
-        setOriginalSensors(newSensors);
-        setFilteredSensors(
-          newSensors.filter(
-            (sensor) =>
-              sensor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              sensor.id.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-        );
+          // Create a new array with the updated sensor
+          const newSensors = [...prevSensors];
+          newSensors[index] = updatedSensorFromServer;
+
+          return newSensors;
+        });
+
+        setOriginalSensors((prevSensors) => {
+          const index = prevSensors.findIndex(
+            (sensor) => sensor.id === updatedSensorFromServer.id
+          );
+          const newSensors = [...prevSensors];
+          newSensors[index] = updatedSensorFromServer;
+
+          return newSensors;
+        });
+
+        // Update the filteredSensors state directly
+        setFilteredSensors((prevFilteredSensors) => {
+          const index = prevFilteredSensors.findIndex(
+            (sensor) => sensor.id === updatedSensorFromServer.id
+          );
+          const newFilteredSensors = [...prevFilteredSensors];
+          newFilteredSensors[index] = updatedSensorFromServer;
+
+          return newFilteredSensors;
+        });
 
         setEditingSensor(null);
+        setShowEditForm(false);
       })
       .catch((error) => {
         console.error(
@@ -221,12 +247,19 @@ const SensorConfig = () => {
         id: "actions",
         Cell: ({ row }) => (
           <div>
-            <button onClick={() => handleEditButtonClick(row.original)}>
+            <Button
+              variant="warning"
+              style={{ marginRight: "5px" }}
+              onClick={() => handleEditButtonClick(row.original)}
+            >
               Edit
-            </button>
-            <button onClick={() => handleDeleteButtonClick(row.original.id)}>
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => handleDeleteButtonClick(row.original.id)}
+            >
               Delete
-            </button>
+            </Button>
           </div>
         ),
       },
@@ -235,34 +268,61 @@ const SensorConfig = () => {
   );
 
   return (
-    <div>
-      <h1>Sensor Configurations</h1>
-      <input type="text" value={searchTerm} onChange={handleSearchChange} />
-      <SensorForm
-        newSensor={newSensor}
-        handleInputChange={handleInputChange}
-        handleAddSensor={handleAddSensor}
-      />
-      {editingSensor && (
+    <Container>
+      <h1 className="text-center">Sensor Configurations</h1>
+
+      {!showEditForm && (
+        <>
+          <InputGroup className="mb-3 mt-4">
+            <Form.Control
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </InputGroup>
+          <Button
+            variant="primary"
+            className="mb-3"
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? "Cancel" : "Create"}
+          </Button>
+        </>
+      )}
+
+      {showForm ? (
+        <SensorForm
+          newSensor={newSensor}
+          handleInputChange={handleInputChange}
+          handleAddSensor={handleAddSensor}
+        />
+      ) : showEditForm ? (
         <EditSensorForm
           editingSensor={editingSensor}
           handleEditInputChange={handleEditInputChange}
           handleEditFormSubmit={handleEditFormSubmit}
         />
+      ) : (
+        <>
+          <Table striped bordered hover>
+            <SensorTable
+              columns={columns}
+              data={currentSensors}
+              handleEditButtonClick={handleEditButtonClick}
+              handleDeleteButtonClick={handleDeleteButtonClick}
+            />
+          </Table>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredSensors.length / pageSize)}
+            handlePreviousClick={() => setCurrentPage(currentPage - 1)}
+            handleNextClick={() => setCurrentPage(currentPage + 1)}
+          />
+        </>
       )}
-      <SensorTable
-        columns={columns}
-        data={currentSensors}
-        handleEditButtonClick={handleEditButtonClick}
-        handleDeleteButtonClick={handleDeleteButtonClick}
-      />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(filteredSensors.length / pageSize)}
-        handlePreviousClick={() => setCurrentPage(currentPage - 1)}
-        handleNextClick={() => setCurrentPage(currentPage + 1)}
-      />
-    </div>
+
+    </Container>
   );
 };
 
