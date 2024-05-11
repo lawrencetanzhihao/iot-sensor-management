@@ -1,3 +1,14 @@
 {
-  "sensors": []
+  "sensors": [
+    {
+      "id": "1",
+      "name": "Orange",
+      "createdBy": "Lawrence",
+      "updatedBy": "Bret",
+      "createTimestamp": "2024-05-11T07:36:47.728Z",
+      "updateTimestamp": "2024-05-11T07:40:05.779Z",
+      "latitude": "456",
+      "longitude": "789"
+    }
+  ]
 }

@@ -25,24 +25,18 @@ const SensorConfig = () => {
 
   // When fetching data from the server, set both originalSensors and filteredSensors
   useEffect(() => {
-    axios.get("http://localhost:3001/sensors").then((response) => {
-      setOriginalSensors(response.data);
-      setFilteredSensors(response.data);
-    });
-  }, []);
-
-  const pageSize = 10;
-
-  useEffect(() => {
     axios
       .get("http://localhost:3001/sensors")
       .then((response) => {
-        setSensors(response.data);
+        setOriginalSensors(response.data);
+        setFilteredSensors(response.data);
       })
       .catch((error) => {
         console.error("Error fetching sensors: ", error);
       });
   }, []);
+
+  const pageSize = 10;
 
   useEffect(() => {
     const lowerCasedSearchTerm = searchTerm.toLowerCase();
@@ -123,19 +117,42 @@ const SensorConfig = () => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
+
+    // Update the updateTimestamp field with the current time
+    const updatedSensor = {
+      ...editingSensor,
+      updateTimestamp: new Date().toISOString(),
+    };
+
+    // Display updated sensor data in the form without making an additional API call
     axios
-      .put(`http://localhost:3001/sensors/${editingSensor.id}`, editingSensor)
+      .put(`http://localhost:3001/sensors/${updatedSensor.id}`, updatedSensor)
       .then(() => {
+        // Find the index of the edited sensor in the sensors array
+        const index = sensors.findIndex(
+          (sensor) => sensor.id === updatedSensor.id
+        );
+
+        // Create a new array with the updated sensor
+        const newSensors = [...sensors];
+        newSensors[index] = updatedSensor;
+
+        // Update the states
+        setSensors(newSensors);
+        setOriginalSensors(newSensors);
+        setFilteredSensors(
+          newSensors.filter(
+            (sensor) =>
+              sensor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              sensor.id.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        );
+
         setEditingSensor(null);
-        axios.get("http://localhost:3001/sensors").then((response) => {
-          setSensors(response.data);
-          setOriginalSensors(response.data);
-          setFilteredSensors(response.data);
-        });
       })
       .catch((error) => {
         console.error(
-          `Error editing sensor with ID ${editingSensor.id}: `,
+          `Error editing sensor with ID ${updatedSensor.id}: `,
           error
         );
       });
