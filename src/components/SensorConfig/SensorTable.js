@@ -1,12 +1,9 @@
-import React from "react";
 import { useTable } from "react-table";
 import { Table } from "react-bootstrap";
 
 const SensorTable = ({
   columns,
   data,
-  handleEditButtonClick,
-  handleDeleteButtonClick,
 }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });

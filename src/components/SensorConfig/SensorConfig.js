@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button, Container, Form, InputGroup, Table } from "react-bootstrap";
-import axios from "axios";
 import SensorForm from "./SensorForm";
 import EditSensorForm from "./EditSensorForm";
 import SensorTable from "./SensorTable";
 import Pagination from "./Pagination";
+import {
+  addSensor,
+  deleteSensor,
+  getSensors,
+  updateSensor,
+} from "../../data/api";
 
 const SensorConfig = () => {
   // Need to fetch the sensor data from our mock API, will use the useEffect hook to fetch the data when the component mounts
@@ -26,10 +31,8 @@ const SensorConfig = () => {
   const [showForm, setShowForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
 
-  // When fetching data from the server, set both originalSensors and filteredSensors
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/sensors")
+    getSensors()
       .then((response) => {
         setOriginalSensors(response.data);
         setFilteredSensors(response.data);
@@ -84,8 +87,7 @@ const SensorConfig = () => {
     };
 
     // Add the new sensor to the list of sensors
-    axios
-      .post("http://localhost:3001/sensors", newSensor)
+    addSensor(newSensor)
       .then((response) => {
         const newSensorList = [...sensors, response.data];
         setSensors(newSensorList);
@@ -132,8 +134,7 @@ const SensorConfig = () => {
     };
 
     // Display updated sensor data in the form without making an additional API call
-    axios
-      .put(`http://localhost:3001/sensors/${updatedSensor.id}`, updatedSensor)
+    updateSensor(updatedSensor.id, updatedSensor)
       .then((response) => {
         // The response from the server after the update should contain the updated sensor data
         const updatedSensorFromServer = response.data;
@@ -185,11 +186,10 @@ const SensorConfig = () => {
   };
 
   const handleDeleteButtonClick = (id) => {
-    axios
-      .delete(`http://localhost:3001/sensors/${id}`)
+    deleteSensor(id)
       .then(() => {
         // Refresh the sensor list after a sensor is deleted
-        axios.get("http://localhost:3001/sensors").then((response) => {
+        getSensors().then((response) => {
           setSensors(response.data);
           setOriginalSensors(response.data);
           setFilteredSensors(response.data);
@@ -204,7 +204,7 @@ const SensorConfig = () => {
     setSearchTerm(event.target.value);
   };
 
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: "Sensor Name",
@@ -321,7 +321,6 @@ const SensorConfig = () => {
           />
         </>
       )}
-
     </Container>
   );
 };

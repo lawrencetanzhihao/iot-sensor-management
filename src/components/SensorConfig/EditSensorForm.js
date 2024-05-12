@@ -1,4 +1,3 @@
-import React from "react";
 import { Form, Button } from "react-bootstrap";
 
 const EditSensorForm = ({
@@ -14,7 +13,7 @@ const EditSensorForm = ({
         <Form.Control
           type="text"
           name="name"
-          value={editingSensor.name}
+          value={editingSensor?.name || ""}
           onChange={handleEditInputChange}
           required
         />
@@ -25,7 +24,7 @@ const EditSensorForm = ({
         <Form.Control
           type="text"
           name="id"
-          value={editingSensor.id}
+          value={editingSensor?.id || ""}
           onChange={handleEditInputChange}
           required
         />
@@ -36,7 +35,7 @@ const EditSensorForm = ({
         <Form.Control
           type="text"
           name="createdBy"
-          value={editingSensor.createdBy}
+          value={editingSensor?.createdBy || ""}
           onChange={handleEditInputChange}
           required
         />
@@ -47,7 +46,7 @@ const EditSensorForm = ({
         <Form.Control
           type="text"
           name="updatedBy"
-          value={editingSensor.updatedBy}
+          value={editingSensor?.updatedBy || ""}
           onChange={handleEditInputChange}
           required
         />
@@ -58,7 +57,7 @@ const EditSensorForm = ({
         <Form.Control
           type="number"
           name="latitude"
-          value={editingSensor.latitude}
+          value={editingSensor?.latitude || ""}
           onChange={handleEditInputChange}
           required
         />
@@ -69,7 +68,7 @@ const EditSensorForm = ({
         <Form.Control
           type="number"
           name="longitude"
-          value={editingSensor.longitude}
+          value={editingSensor?.longitude || ""}
           onChange={handleEditInputChange}
           required
         />

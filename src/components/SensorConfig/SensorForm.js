@@ -1,5 +1,3 @@
-import React from "react";
-
 const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
   return (
     <div className="container mt-5">
