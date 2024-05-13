@@ -89,9 +89,10 @@ const SensorConfig = () => {
     // Add the new sensor to the list of sensors
     addSensor(newSensor)
       .then((response) => {
-        const newSensorList = [...sensors, response.data];
+        const newSensorList = [...filteredSensors, response.data];
         setSensors(newSensorList);
         setFilteredSensors(newSensorList);
+        setOriginalSensors(newSensorList);
         // Clear the input fields
         setNewSensor({
           name: "",
