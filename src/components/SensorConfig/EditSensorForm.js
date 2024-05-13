@@ -74,7 +74,7 @@ const EditSensorForm = ({
         />
       </Form.Group>
 
-      <Button variant="warning" className="mt-4" type="submit">
+      <Button data-testid="update-btn" variant="warning" className="mt-4" type="submit">
         Update Sensor
       </Button>
     </Form>

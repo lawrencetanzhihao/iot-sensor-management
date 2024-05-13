@@ -3,9 +3,12 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
     <div className="container mt-5">
       <form onSubmit={handleAddSensor}>
         <div className="mb-3">
-          <label className="form-label">Sensor Name:</label>
+          <label htmlFor="name" className="form-label">
+            Sensor Name:
+          </label>
           <input
             type="text"
+            id="name"
             name="name"
             value={newSensor.name}
             onChange={handleInputChange}
@@ -14,9 +17,12 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Sensor ID:</label>
+          <label htmlFor="id" className="form-label">
+            Sensor ID:
+          </label>
           <input
             type="text"
+            id="id"
             name="id"
             value={newSensor.id}
             onChange={handleInputChange}
@@ -25,9 +31,12 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Created By:</label>
+          <label htmlFor="createdBy" className="form-label">
+            Created By:
+          </label>
           <input
             type="text"
+            id="createdBy"
             name="createdBy"
             value={newSensor.createdBy}
             onChange={handleInputChange}
@@ -36,9 +45,12 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Updated By:</label>
+          <label htmlFor="updatedBy" className="form-label">
+            Updated By:
+          </label>
           <input
             type="text"
+            id="updatedBy"
             name="updatedBy"
             value={newSensor.updatedBy}
             onChange={handleInputChange}
@@ -47,9 +59,12 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Latitude:</label>
+          <label htmlFor="latitude" className="form-label">
+            Latitude:
+          </label>
           <input
             type="number"
+            id="latitude"
             name="latitude"
             value={newSensor.latitude}
             onChange={handleInputChange}
@@ -58,9 +73,12 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Longitude:</label>
+          <label htmlFor="longitude" className="form-label">
+            Longitude:
+          </label>
           <input
             type="number"
+            id="longitude"
             name="longitude"
             value={newSensor.longitude}
             onChange={handleInputChange}
@@ -68,7 +86,7 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             className="form-control"
           />
         </div>
-        <button type="submit" className=" btn btn-success">
+        <button data-testid="submit-btn" type="submit" className=" btn btn-success">
           Add Sensor
         </button>
       </form>
