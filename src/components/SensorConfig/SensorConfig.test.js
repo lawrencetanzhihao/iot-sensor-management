@@ -75,14 +75,36 @@ test("adds a new sensor when user submits the form", async () => {
   );
 
   fireEvent.change(
+    screen.getByLabelText(/Sensor ID:/i, { selector: "input" }),
+    {
+      target: { value: "1" },
+    }
+  );
+
+  fireEvent.change(
     screen.getByLabelText(/Created By:/i, { selector: "input" }),
     {
       target: { value: "User 3" },
     }
   );
 
-  // TODO
-  // ... repeat for all fields
+  fireEvent.change(
+    screen.getByLabelText(/Updated By:/i, { selector: "input" }),
+    {
+      target: { value: "User 4" },
+    }
+  );
+
+  fireEvent.change(screen.getByLabelText(/Latitude:/i, { selector: "input" }), {
+    target: { value: "20" },
+  });
+
+  fireEvent.change(
+    screen.getByLabelText(/Longitude:/i, { selector: "input" }),
+    {
+      target: { value: "30" },
+    }
+  );
 
   // Submit the form
   fireEvent.click(screen.getByText(/Add Sensor/i));
@@ -95,7 +117,6 @@ test("adds a new sensor when user submits the form", async () => {
   expect(screen.getByText(/Sensor 3/i)).toBeInTheDocument();
 });
 
-// Repeat similar tests for editing and deleting sensors
 test("edits a sensor when user updates the form", async () => {
   render(<SensorConfig />);
 
@@ -108,7 +129,15 @@ test("edits a sensor when user updates the form", async () => {
     screen.getByLabelText(/Sensor Name:/i, { selector: "input" })
   );
 
-  // ... repeat for all fields
+  fireEvent.change(screen.getByLabelText(/Sensor ID:/i, { selector: "input" }));
+  fireEvent.change(
+    screen.getByLabelText(/Created By:/i, { selector: "input" })
+  );
+  fireEvent.change(
+    screen.getByLabelText(/Updated By:/i, { selector: "input" })
+  );
+  fireEvent.change(screen.getByLabelText(/Latitude:/i, { selector: "input" }));
+  fireEvent.change(screen.getByLabelText(/Longitude:/i, { selector: "input" }));
 
   // Submit the form
   fireEvent.click(screen.getByText(/Update Sensor/i));
@@ -116,30 +145,3 @@ test("edits a sensor when user updates the form", async () => {
   // Wait for the updateSensor API call to be made
   await waitFor(() => expect(updateSensor).toHaveBeenCalledTimes(1));
 });
-
-// TODO: Implement the test for deleting a sensor
-// test("deletes a sensor when user clicks the delete button", async () => {
-//   const { rerender } = render(<SensorConfig />);
-
-//   // Click the "Delete" button for the first sensor
-//   // Wait for the "Delete" button to appear and click it
-//   const deleteButtons = await screen.findAllByRole("button", {
-//     name: /Delete/i,
-//   });
-//   fireEvent.click(deleteButtons[0]);
-
-//   // Wait for the deleteSensor API call to be made
-//   await waitFor(() => expect(deleteSensor).toHaveBeenCalledTimes(1));
-
-//   // Check if the sensor is removed from the list
-//   // Note: This assumes that the deleteSensor API call removes the sensor
-//   // expect(screen.queryByText(/Sensor 1/i)).not.toBeInTheDocument();
-
-//   // Force a re-render to reflect the changes made by the deleteSensor API call
-//   rerender(<SensorConfig />);
-
-//   // Wait for the sensor to be removed from the list
-//   await waitFor(() =>
-//     expect(screen.queryByText(/Sensor 1/i)).not.toBeInTheDocument()
-//   );
-// });
