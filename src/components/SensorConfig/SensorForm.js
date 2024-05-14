@@ -86,7 +86,7 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             className="form-control"
           />
         </div>
-        <button data-testid="submit-btn" type="submit" className=" btn btn-success">
+        <button data-testid="submit-btn" type="submit" className="btn btn-success">
           Add Sensor
         </button>
       </form>

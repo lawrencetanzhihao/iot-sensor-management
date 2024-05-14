@@ -31,6 +31,8 @@ const SensorConfig = () => {
   const [showForm, setShowForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
 
+  const pageSize = 10;
+
   useEffect(() => {
     getSensors()
       .then((response) => {
@@ -41,8 +43,6 @@ const SensorConfig = () => {
         console.error("Error fetching sensors: ", error);
       });
   }, []);
-
-  const pageSize = 10;
 
   useEffect(() => {
     const lowerCasedSearchTerm = searchTerm.toLowerCase();
@@ -61,6 +61,7 @@ const SensorConfig = () => {
     });
 
     setFilteredSensors(newFilteredSensors);
+    setCurrentPage(1);
   }, [searchTerm, originalSensors]);
 
   // Calculate the range of sensors for the current page
@@ -241,8 +242,6 @@ const SensorConfig = () => {
         Header: "Longitude",
         accessor: "longitude",
       },
-
-      // Add more columns as needed
       {
         Header: "Actions",
         id: "actions",
@@ -268,6 +267,30 @@ const SensorConfig = () => {
     []
   );
 
+  const CreateCancelButton = () => (
+    <Button
+      variant="primary"
+      className="mb-3"
+      onClick={() => setShowForm(!showForm)}
+    >
+      {showForm ? "Cancel" : "Create"}
+    </Button>
+  );
+
+  const SensorTablePagination = () => (
+    <>
+      <Table striped bordered hover>
+        <SensorTable columns={columns} data={currentSensors} />
+      </Table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(filteredSensors.length / pageSize)}
+        handlePreviousClick={() => setCurrentPage(currentPage - 1)}
+        handleNextClick={() => setCurrentPage(currentPage + 1)}
+      />
+    </>
+  );
+
   return (
     <Container>
       <h1 className="text-center">Sensor Configurations</h1>
@@ -282,13 +305,7 @@ const SensorConfig = () => {
               onChange={handleSearchChange}
             />
           </InputGroup>
-          <Button
-            variant="primary"
-            className="mb-3"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Cancel" : "Create"}
-          </Button>
+          <CreateCancelButton />
         </>
       )}
 
@@ -305,22 +322,7 @@ const SensorConfig = () => {
           handleEditFormSubmit={handleEditFormSubmit}
         />
       ) : (
-        <>
-          <Table striped bordered hover>
-            <SensorTable
-              columns={columns}
-              data={currentSensors}
-              handleEditButtonClick={handleEditButtonClick}
-              handleDeleteButtonClick={handleDeleteButtonClick}
-            />
-          </Table>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(filteredSensors.length / pageSize)}
-            handlePreviousClick={() => setCurrentPage(currentPage - 1)}
-            handleNextClick={() => setCurrentPage(currentPage + 1)}
-          />
-        </>
+        <SensorTablePagination />
       )}
     </Container>
   );
