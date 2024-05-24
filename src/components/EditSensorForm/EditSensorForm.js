@@ -1,7 +1,10 @@
-const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
+const EditSensorForm = ({
+  editingSensor,
+  handleEditInputChange,
+  handleEditFormSubmit,
+}) => {
   return (
-    <div className="container mt-5">
-      <form onSubmit={handleAddSensor}>
+      <form onSubmit={handleEditFormSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Sensor Name:
@@ -10,8 +13,8 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             type="text"
             id="name"
             name="name"
-            value={newSensor.name}
-            onChange={handleInputChange}
+            value={editingSensor?.name || ""}
+            onChange={handleEditInputChange}
             required
             className="form-control"
           />
@@ -24,8 +27,8 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             type="text"
             id="id"
             name="id"
-            value={newSensor.id}
-            onChange={handleInputChange}
+            value={editingSensor?.id || ""}
+            onChange={handleEditInputChange}
             required
             className="form-control"
           />
@@ -38,8 +41,8 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             type="text"
             id="createdBy"
             name="createdBy"
-            value={newSensor.createdBy}
-            onChange={handleInputChange}
+            value={editingSensor?.createdBy || ""}
+            onChange={handleEditInputChange}
             required
             className="form-control"
           />
@@ -52,8 +55,8 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             type="text"
             id="updatedBy"
             name="updatedBy"
-            value={newSensor.updatedBy}
-            onChange={handleInputChange}
+            value={editingSensor?.updatedBy || ""}
+            onChange={handleEditInputChange}
             required
             className="form-control"
           />
@@ -66,8 +69,8 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             type="number"
             id="latitude"
             name="latitude"
-            value={newSensor.latitude}
-            onChange={handleInputChange}
+            value={editingSensor?.latitude || ""}
+            onChange={handleEditInputChange}
             required
             className="form-control"
           />
@@ -80,18 +83,21 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
             type="number"
             id="longitude"
             name="longitude"
-            value={newSensor.longitude}
-            onChange={handleInputChange}
+            value={editingSensor?.longitude || ""}
+            onChange={handleEditInputChange}
             required
             className="form-control"
           />
         </div>
-        <button data-testid="submit-btn" type="submit" className="btn btn-success">
-          Add Sensor
+        <button
+          data-testid="update-btn"
+          type="submit"
+          className="btn btn-warning"
+        >
+          Update
         </button>
       </form>
-    </div>
   );
 };
 
-export default SensorForm;
+export default EditSensorForm;

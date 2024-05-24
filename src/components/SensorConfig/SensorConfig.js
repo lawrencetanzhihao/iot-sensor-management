@@ -1,15 +1,20 @@
 import { useEffect, useState, useMemo } from "react";
-import { Button, Container, Form, InputGroup, Table } from "react-bootstrap";
-import SensorForm from "./SensorForm";
-import EditSensorForm from "./EditSensorForm";
-import SensorTable from "./SensorTable";
-import Pagination from "./Pagination";
+import { FiEdit2, FiTrash2, FiPlusCircle } from "react-icons/fi";
+import { LuRefreshCcw } from "react-icons/lu";
+import { Button, Container } from "react-bootstrap";
 import {
   addSensor,
   deleteSensor,
   getSensors,
   updateSensor,
 } from "../../data/api";
+import "./SensorConfig.css";
+import EmptyState from "../EmptyState/EmptyState";
+import SensorTableWithPagination from "../SensorTableWithPagination/SensorTableWithPagination";
+import SearchInput from "../SearchInput/SearchInput";
+import LoadingState from "../LoadingState/LoadingState";
+import SensorModal from "../Modal/SensorModal";
+import SuccessToast from "../SuccessToast/SuccessToast";
 
 const SensorConfig = () => {
   // Need to fetch the sensor data from our mock API, will use the useEffect hook to fetch the data when the component mounts
@@ -28,19 +33,25 @@ const SensorConfig = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [originalSensors, setOriginalSensors] = useState([]);
   const [filteredSensors, setFilteredSensors] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [filterSearch, setFilterSearch] = useState("All");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const pageSize = 10;
 
   useEffect(() => {
+    setLoading(true);
     getSensors()
       .then((response) => {
         setOriginalSensors(response.data);
         setFilteredSensors(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching sensors: ", error);
+        setLoading(false);
       });
   }, []);
 
@@ -68,6 +79,11 @@ const SensorConfig = () => {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, filteredSensors.length);
   const currentSensors = filteredSensors.slice(startIndex, endIndex);
+
+  const displayToast = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
+  };
 
   const handleInputChange = (event) => {
     setNewSensor({ ...newSensor, [event.target.name]: event.target.value });
@@ -105,18 +121,19 @@ const SensorConfig = () => {
           latitude: "",
           longitude: "",
         });
+        displayToast("Sensor successfully created!");
       })
       .catch((error) => {
         console.error("Error adding sensor: ", error);
       });
 
-    // After adding a new sensor, switch back to the table view
-    setShowForm(false);
+    // After adding a new sensor, close the modal
+    setModalContent(null);
   };
 
   const handleEditButtonClick = (sensor) => {
     setEditingSensor(sensor);
-    setShowEditForm(true);
+    setModalContent("edit");
   };
 
   const handleEditInputChange = (event) => {
@@ -177,7 +194,8 @@ const SensorConfig = () => {
         });
 
         setEditingSensor(null);
-        setShowEditForm(false);
+        setModalContent(null);
+        displayToast("Sensor successfully edited!");
       })
       .catch((error) => {
         console.error(
@@ -195,6 +213,7 @@ const SensorConfig = () => {
           setSensors(response.data);
           setOriginalSensors(response.data);
           setFilteredSensors(response.data);
+          displayToast("Sensor successfully deleted!");
         });
       })
       .catch((error) => {
@@ -204,6 +223,21 @@ const SensorConfig = () => {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleRefreshButton = () => {
+    getSensors()
+      .then((response) => {
+        setOriginalSensors(response.data);
+        setFilteredSensors(response.data);
+      })
+      .catch((error) => {
+        console.error("Error refreshing sensors: ", error);
+      });
+  };
+
+  const handleSearchFilter = (selectedFilter) => {
+    setFilterSearch(selectedFilter);
   };
 
   const columns = useMemo(
@@ -252,13 +286,13 @@ const SensorConfig = () => {
               style={{ marginRight: "5px" }}
               onClick={() => handleEditButtonClick(row.original)}
             >
-              Edit
+              <FiEdit2 />
             </Button>
             <Button
               variant="danger"
               onClick={() => handleDeleteButtonClick(row.original.id)}
             >
-              Delete
+              <FiTrash2 />
             </Button>
           </div>
         ),
@@ -267,63 +301,77 @@ const SensorConfig = () => {
     []
   );
 
-  const CreateCancelButton = () => (
+  const CreateButton = () => (
     <Button
-      variant="primary"
+      variant="success"
       className="mb-3"
-      onClick={() => setShowForm(!showForm)}
+      onClick={() => setModalContent("add")}
     >
-      {showForm ? "Cancel" : "Create"}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <span>Create</span>
+        <FiPlusCircle style={{ marginLeft: "3px" }} />
+      </div>
+    </Button>
+  );
+
+  const RefreshButton = () => (
+    <Button
+      variant="outline-secondary"
+      className="mb-3"
+      style={{ marginLeft: "10px" }}
+      onClick={handleRefreshButton}
+    >
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <span>Refresh</span>
+        <LuRefreshCcw style={{ marginLeft: "3px" }} />
+      </div>
     </Button>
   );
 
   const SensorTablePagination = () => (
     <>
-      <Table striped bordered hover>
-        <SensorTable columns={columns} data={currentSensors} />
-      </Table>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(filteredSensors.length / pageSize)}
-        handlePreviousClick={() => setCurrentPage(currentPage - 1)}
-        handleNextClick={() => setCurrentPage(currentPage + 1)}
-      />
+      {filteredSensors.length === 0 ? (
+        <EmptyState searchTerm={searchTerm} />
+      ) : (
+        <SensorTableWithPagination
+          columns={columns}
+          currentSensors={currentSensors}
+          currentPage={currentPage}
+          filteredSensors={filteredSensors}
+          pageSize={pageSize}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </>
   );
 
   return (
-    <Container>
-      <h1 className="text-center">Sensor Configurations</h1>
-
-      {!showEditForm && (
-        <>
-          <InputGroup className="mb-3 mt-4">
-            <Form.Control
-              type="text"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </InputGroup>
-          <CreateCancelButton />
-        </>
-      )}
-
-      {showForm ? (
-        <SensorForm
-          newSensor={newSensor}
-          handleInputChange={handleInputChange}
-          handleAddSensor={handleAddSensor}
-        />
-      ) : showEditForm ? (
-        <EditSensorForm
-          editingSensor={editingSensor}
-          handleEditInputChange={handleEditInputChange}
-          handleEditFormSubmit={handleEditFormSubmit}
-        />
-      ) : (
-        <SensorTablePagination />
-      )}
+    <Container className="container">
+      <h1 className="text-center header">Sensor Configurations</h1>
+      <SearchInput
+        filterSearch={filterSearch}
+        searchTerm={searchTerm}
+        handleSearchChange={handleSearchChange}
+        handleSearchFilter={handleSearchFilter}
+      />
+      <CreateButton />
+      <RefreshButton />
+      {loading ? <LoadingState /> : <SensorTablePagination />}
+      <SensorModal
+        modalContent={modalContent}
+        newSensor={newSensor}
+        handleInputChange={handleInputChange}
+        handleAddSensor={handleAddSensor}
+        editingSensor={editingSensor}
+        handleEditInputChange={handleEditInputChange}
+        handleEditFormSubmit={handleEditFormSubmit}
+        setModalContent={setModalContent}
+      />
+      <SuccessToast
+        showToast={showToast}
+        setShowToast={setShowToast}
+        toastMessage={toastMessage}
+      />
     </Container>
   );
 };
