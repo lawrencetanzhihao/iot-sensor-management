@@ -18,7 +18,12 @@ const SensorTable = ({ columns, data }) => {
               {headerGroup.headers.map((column) => {
                 const { key, ...props } = column.getHeaderProps();
                 return (
-                  <th key={key} {...props}>
+                  <th
+                    key={key}
+                    {...props}
+                    className="text-center"
+                    style={{ backgroundColor: "#E8F5E9" }}
+                  >
                     {column.render("Header")}
                   </th>
                 );
@@ -36,7 +41,7 @@ const SensorTable = ({ columns, data }) => {
               {row.cells.map((cell) => {
                 const { key, ...props } = cell.getCellProps();
                 return (
-                  <td key={key} {...props}>
+                  <td key={key} {...props} className="text-center">
                     {cell.render("Cell")}
                   </td>
                 );

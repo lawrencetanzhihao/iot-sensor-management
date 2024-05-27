@@ -1,114 +1,24 @@
 {
   "sensors": [
     {
-      "id": "123",
-      "name": "pineapple",
-      "createdBy": "123",
-      "updatedBy": "123",
-      "createTimestamp": "2024-05-24T09:29:01.103Z",
-      "updateTimestamp": "2024-05-24T09:34:11.486Z",
-      "latitude": "123",
-      "longitude": "213"
-    },
-    {
-      "id": "213",
-      "name": "123",
-      "createdBy": "123",
-      "updatedBy": "123",
-      "createTimestamp": "2024-05-24T09:31:59.033Z",
-      "updateTimestamp": "2024-05-24T09:31:59.033Z",
-      "latitude": "123",
-      "longitude": "123"
-    },
-    {
-      "id": "123",
-      "name": "123",
-      "createdBy": "123",
-      "updatedBy": "213",
-      "createTimestamp": "2024-05-24T09:32:04.195Z",
-      "updateTimestamp": "2024-05-24T09:32:04.195Z",
-      "latitude": "123",
-      "longitude": "123"
-    },
-    {
-      "id": "123",
-      "name": "sadad",
-      "createdBy": "asd",
-      "updatedBy": "sad",
-      "createTimestamp": "2024-05-24T09:32:10.708Z",
-      "updateTimestamp": "2024-05-24T09:32:10.708Z",
-      "latitude": "123",
-      "longitude": "123"
+      "id": "234",
+      "name": "lawrence",
+      "createdBy": "234",
+      "updatedBy": "234",
+      "createTimestamp": "2024-05-27T06:45:09.610Z",
+      "updateTimestamp": "2024-05-27T08:13:40.346Z",
+      "latitude": "234",
+      "longitude": "234"
     },
     {
       "id": "123",
       "name": "123",
       "createdBy": "123",
       "updatedBy": "123",
-      "createTimestamp": "2024-05-24T09:32:16.976Z",
-      "updateTimestamp": "2024-05-24T09:32:16.976Z",
+      "createTimestamp": "2024-05-27T06:50:38.873Z",
+      "updateTimestamp": "2024-05-27T06:50:38.873Z",
       "latitude": "123",
       "longitude": "123"
-    },
-    {
-      "id": "123",
-      "name": "123",
-      "createdBy": "213",
-      "updatedBy": "123",
-      "createTimestamp": "2024-05-24T09:32:21.691Z",
-      "updateTimestamp": "2024-05-24T09:32:21.691Z",
-      "latitude": "123",
-      "longitude": "123"
-    },
-    {
-      "id": "123",
-      "name": "asd",
-      "createdBy": "123",
-      "updatedBy": "123",
-      "createTimestamp": "2024-05-24T09:32:27.281Z",
-      "updateTimestamp": "2024-05-24T09:32:27.281Z",
-      "latitude": "123",
-      "longitude": "213"
-    },
-    {
-      "id": "123",
-      "name": "123",
-      "createdBy": "123",
-      "updatedBy": "123",
-      "createTimestamp": "2024-05-24T09:32:36.126Z",
-      "updateTimestamp": "2024-05-24T09:32:36.126Z",
-      "latitude": "123",
-      "longitude": "213"
-    },
-    {
-      "id": "12",
-      "name": "123",
-      "createdBy": "dsa",
-      "updatedBy": "sad",
-      "createTimestamp": "2024-05-24T09:32:42.392Z",
-      "updateTimestamp": "2024-05-24T09:32:42.392Z",
-      "latitude": "123",
-      "longitude": "123"
-    },
-    {
-      "id": "123",
-      "name": "apple",
-      "createdBy": "123123",
-      "updatedBy": "123",
-      "createTimestamp": "2024-05-24T09:32:56.428Z",
-      "updateTimestamp": "2024-05-24T09:32:56.428Z",
-      "latitude": "123",
-      "longitude": "123"
-    },
-    {
-      "id": "123",
-      "name": "mango",
-      "createdBy": "123",
-      "updatedBy": "12",
-      "createTimestamp": "2024-05-24T09:33:50.709Z",
-      "updateTimestamp": "2024-05-24T09:33:50.709Z",
-      "latitude": "312",
-      "longitude": "3213"
     }
   ]
 }

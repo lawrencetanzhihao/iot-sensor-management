@@ -347,7 +347,11 @@ const SensorConfig = () => {
 
   return (
     <Container className="container">
-      <h1 className="text-center header">Sensor Configurations</h1>
+      <Container className="my-2">
+        <h1 className="text-center" style={{ color: "black" }}>
+          Sensor Configuration
+        </h1>
+      </Container>
       <SearchInput
         filterSearch={filterSearch}
         searchTerm={searchTerm}
