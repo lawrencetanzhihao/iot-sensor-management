@@ -1,24 +1,54 @@
 {
   "sensors": [
     {
-      "id": "234",
-      "name": "lawrence",
-      "createdBy": "234",
-      "updatedBy": "234",
-      "createTimestamp": "2024-05-27T06:45:09.610Z",
-      "updateTimestamp": "2024-05-27T08:13:40.346Z",
-      "latitude": "234",
-      "longitude": "234"
+      "id": "877dc5a1",
+      "name": "Temperature sensor",
+      "createdBy": "Lawrence",
+      "updatedBy": "Lawrence",
+      "createTimestamp": "2024-05-28T09:03:21.068Z",
+      "updateTimestamp": "2024-05-28T09:03:21.068Z",
+      "latitude": "10",
+      "longitude": "40"
     },
     {
-      "id": "123",
-      "name": "123",
+      "id": "fd966335",
+      "name": "Infrared sensor",
+      "createdBy": "John",
+      "updatedBy": "John",
+      "createTimestamp": "2024-05-28T09:03:34.051Z",
+      "updateTimestamp": "2024-05-28T09:03:34.051Z",
+      "latitude": "55",
+      "longitude": "04"
+    },
+    {
+      "id": "1d1c9f6e",
+      "name": "Motion sensor",
+      "createdBy": "Mary",
+      "updatedBy": "John",
+      "createTimestamp": "2024-05-28T09:03:53.324Z",
+      "updateTimestamp": "2024-05-28T09:04:26.385Z",
+      "latitude": "91",
+      "longitude": "80"
+    },
+    {
+      "id": "4b23b6eb",
+      "name": "Sensor 1",
+      "createdBy": "Oscar",
+      "updatedBy": "Oscar",
+      "createTimestamp": "2024-05-28T09:05:46.641Z",
+      "updateTimestamp": "2024-05-28T09:05:46.641Z",
+      "latitude": "123.31",
+      "longitude": "123.44"
+    },
+    {
+      "id": "a693c8f8",
+      "name": "Orange",
       "createdBy": "123",
       "updatedBy": "123",
-      "createTimestamp": "2024-05-27T06:50:38.873Z",
-      "updateTimestamp": "2024-05-27T06:50:38.873Z",
-      "latitude": "123",
-      "longitude": "123"
+      "createTimestamp": "2024-05-28T09:23:57.029Z",
+      "updateTimestamp": "2024-05-28T09:24:09.839Z",
+      "latitude": "999",
+      "longitude": "000"
     }
   ]
 }

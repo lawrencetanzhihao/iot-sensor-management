@@ -22,7 +22,7 @@ const SearchInput = ({
         onSelect={handleSearchFilter}
       >
         <Dropdown.Item eventKey="All">All</Dropdown.Item>
-        <Dropdown.Item eventKey="Name">Name</Dropdown.Item>
+        <Dropdown.Item eventKey="Sensor Name">Sensor Name</Dropdown.Item>
         <Dropdown.Item eventKey="ID">ID</Dropdown.Item>
         <Dropdown.Item eventKey="Timestamp">Timestamp</Dropdown.Item>
       </DropdownButton>

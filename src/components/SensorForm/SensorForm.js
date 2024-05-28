@@ -16,20 +16,6 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="id" className="form-label">
-          Sensor ID:
-        </label>
-        <input
-          type="text"
-          id="id"
-          name="id"
-          value={newSensor.id}
-          onChange={handleInputChange}
-          required
-          className="form-control"
-        />
-      </div>
-      <div className="mb-3">
         <label htmlFor="createdBy" className="form-label">
           Created By:
         </label>

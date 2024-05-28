@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState, useMemo } from "react";
 import { FiEdit2, FiTrash2, FiPlusCircle } from "react-icons/fi";
 import { LuRefreshCcw } from "react-icons/lu";
@@ -15,14 +16,13 @@ import SearchInput from "../SearchInput/SearchInput";
 import LoadingState from "../LoadingState/LoadingState";
 import SensorModal from "../Modal/SensorModal";
 import SuccessToast from "../SuccessToast/SuccessToast";
+import ErrorToast from "../ErrorToast/ErrorToast";
 
 const SensorConfig = () => {
-  // Need to fetch the sensor data from our mock API, will use the useEffect hook to fetch the data when the component mounts
-  // useState hook to store the data
+  // Fetch the sensor data from the mock API, will use the useEffect hook to fetch the data when the component mounts
   const [sensors, setSensors] = useState([]);
   const [newSensor, setNewSensor] = useState({
     name: "",
-    id: "",
     createdBy: "",
     updatedBy: "",
     latitude: "",
@@ -38,6 +38,8 @@ const SensorConfig = () => {
   const [filterSearch, setFilterSearch] = useState("All");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [errorToastMessage, setErrorToastMessage] = useState("");
 
   const pageSize = 10;
 
@@ -85,6 +87,11 @@ const SensorConfig = () => {
     setShowToast(true);
   };
 
+  const errorToast = (errorMessage) => {
+    setErrorToastMessage(errorMessage);
+    setShowErrorToast(true);
+  };
+
   const handleInputChange = (event) => {
     setNewSensor({ ...newSensor, [event.target.name]: event.target.value });
   };
@@ -93,7 +100,7 @@ const SensorConfig = () => {
     event.preventDefault();
 
     const newSensor = {
-      id: event.target.elements.id.value,
+      id: uuidv4().slice(0, 8),
       name: event.target.elements.name.value,
       createdBy: event.target.elements.createdBy.value,
       updatedBy: event.target.elements.updatedBy.value,
@@ -113,7 +120,6 @@ const SensorConfig = () => {
         // Clear the input fields
         setNewSensor({
           name: "",
-          id: "",
           createdBy: "",
           updatedBy: "",
           createTimestamp: "",
@@ -123,8 +129,8 @@ const SensorConfig = () => {
         });
         displayToast("Sensor successfully created!");
       })
-      .catch((error) => {
-        console.error("Error adding sensor: ", error);
+      .catch(() => {
+        errorToast("Error adding sensor!");
       });
 
     // After adding a new sensor, close the modal
@@ -195,13 +201,10 @@ const SensorConfig = () => {
 
         setEditingSensor(null);
         setModalContent(null);
-        displayToast("Sensor successfully edited!");
+        displayToast("Sensor successfully updated!");
       })
-      .catch((error) => {
-        console.error(
-          `Error editing sensor with ID ${updatedSensor.id}: `,
-          error
-        );
+      .catch(() => {
+        errorToast(`Error updated sensor with ID ${updatedSensor.id}`);
       });
   };
 
@@ -216,8 +219,8 @@ const SensorConfig = () => {
           displayToast("Sensor successfully deleted!");
         });
       })
-      .catch((error) => {
-        console.error(`Error deleting sensor with ID ${id}: `, error);
+      .catch(() => {
+        errorToast("Error deleting sensor!");
       });
   };
 
@@ -234,6 +237,10 @@ const SensorConfig = () => {
       .catch((error) => {
         console.error("Error refreshing sensors: ", error);
       });
+  };
+
+  const handleCreateButton = () => {
+    setModalContent("add");
   };
 
   const handleSearchFilter = (selectedFilter) => {
@@ -302,11 +309,7 @@ const SensorConfig = () => {
   );
 
   const CreateButton = () => (
-    <Button
-      variant="success"
-      className="mb-3"
-      onClick={() => setModalContent("add")}
-    >
+    <Button variant="success" className="mb-3" onClick={handleCreateButton}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <span>Create</span>
         <FiPlusCircle style={{ marginLeft: "3px" }} />
@@ -375,6 +378,11 @@ const SensorConfig = () => {
         showToast={showToast}
         setShowToast={setShowToast}
         toastMessage={toastMessage}
+      />
+      <ErrorToast
+        showErrorToast={showErrorToast}
+        setShowErrorToast={setShowErrorToast}
+        errorToastMessage={errorToastMessage}
       />
     </Container>
   );

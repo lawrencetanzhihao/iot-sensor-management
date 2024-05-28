@@ -6,9 +6,7 @@ const SensorTable = ({ columns, data }) => {
     useTable({ columns, data });
 
   return (
-    // Display sensor data
-    // This code will display a table with the sensor data fetched from the mock API
-    // The table will have columns for the sensor name and ID, and a row for each sensor
+    // Display sensor table with the sensor data fetched from the mock API
     <Table striped bordered hover {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => {
