@@ -61,21 +61,41 @@ const SensorConfig = () => {
     const lowerCasedSearchTerm = searchTerm.toLowerCase();
 
     const newFilteredSensors = originalSensors.filter((sensor) => {
-      return (
-        sensor.name.toLowerCase().includes(lowerCasedSearchTerm) ||
-        sensor.id.toLowerCase().includes(lowerCasedSearchTerm) ||
-        new Date(sensor.createTimestamp)
-          .toLocaleString()
-          .includes(lowerCasedSearchTerm) ||
-        new Date(sensor.updateTimestamp)
-          .toLocaleString()
-          .includes(lowerCasedSearchTerm)
-      );
+      switch (filterSearch) {
+        case "Sensor Name":
+          return sensor.name.toLowerCase().includes(lowerCasedSearchTerm);
+        case "ID":
+          return sensor.id.toLowerCase().includes(lowerCasedSearchTerm);
+        case "Timestamp":
+          return (
+            new Date(sensor.createTimestamp)
+              .toLocaleString()
+              .includes(lowerCasedSearchTerm) ||
+            new Date(sensor.updateTimestamp)
+              .toLocaleString()
+              .includes(lowerCasedSearchTerm)
+          );
+        default:
+          return (
+            sensor.name.toLowerCase().includes(lowerCasedSearchTerm) ||
+            sensor.id.toLowerCase().includes(lowerCasedSearchTerm) ||
+            new Date(sensor.createTimestamp)
+              .toLocaleString()
+              .includes(lowerCasedSearchTerm) ||
+            new Date(sensor.updateTimestamp)
+              .toLocaleString()
+              .includes(lowerCasedSearchTerm) ||
+            sensor.createdBy.toLowerCase().includes(lowerCasedSearchTerm) ||
+            sensor.updatedBy.toLowerCase().includes(lowerCasedSearchTerm) ||
+            sensor.latitude.toString().includes(lowerCasedSearchTerm) ||
+            sensor.longitude.toString().includes(lowerCasedSearchTerm)
+          );
+      }
     });
 
     setFilteredSensors(newFilteredSensors);
     setCurrentPage(1);
-  }, [searchTerm, originalSensors]);
+  }, [searchTerm, originalSensors, filterSearch]);
 
   // Calculate the range of sensors for the current page
   const startIndex = (currentPage - 1) * pageSize;
@@ -113,10 +133,15 @@ const SensorConfig = () => {
     // Add the new sensor to the list of sensors
     addSensor(newSensor)
       .then((response) => {
-        const newSensorList = [...filteredSensors, response.data];
-        setSensors(newSensorList);
-        setFilteredSensors(newSensorList);
-        setOriginalSensors(newSensorList);
+        setSensors((prevSensors) => [...prevSensors, response.data]);
+        setFilteredSensors((prevFilteredSensors) => [
+          ...prevFilteredSensors,
+          response.data,
+        ]);
+        setOriginalSensors((prevOriginalSensors) => [
+          ...prevOriginalSensors,
+          response.data,
+        ]);
         // Clear the input fields
         setNewSensor({
           name: "",
@@ -164,39 +189,28 @@ const SensorConfig = () => {
         // The response from the server after the update should contain the updated sensor data
         const updatedSensorFromServer = response.data;
 
-        // Update the states using a functional update
         setSensors((prevSensors) => {
-          // Find the index of the edited sensor in the previous sensors array
-          const index = prevSensors.findIndex(
-            (sensor) => sensor.id === updatedSensorFromServer.id
+          return prevSensors.map((sensor) =>
+            sensor.id === updatedSensorFromServer.id
+              ? updatedSensorFromServer
+              : sensor
           );
-
-          // Create a new array with the updated sensor
-          const newSensors = [...prevSensors];
-          newSensors[index] = updatedSensorFromServer;
-
-          return newSensors;
         });
 
         setOriginalSensors((prevSensors) => {
-          const index = prevSensors.findIndex(
-            (sensor) => sensor.id === updatedSensorFromServer.id
+          return prevSensors.map((sensor) =>
+            sensor.id === updatedSensorFromServer.id
+              ? updatedSensorFromServer
+              : sensor
           );
-          const newSensors = [...prevSensors];
-          newSensors[index] = updatedSensorFromServer;
-
-          return newSensors;
         });
 
-        // Update the filteredSensors state directly
         setFilteredSensors((prevFilteredSensors) => {
-          const index = prevFilteredSensors.findIndex(
-            (sensor) => sensor.id === updatedSensorFromServer.id
+          return prevFilteredSensors.map((sensor) =>
+            sensor.id === updatedSensorFromServer.id
+              ? updatedSensorFromServer
+              : sensor
           );
-          const newFilteredSensors = [...prevFilteredSensors];
-          newFilteredSensors[index] = updatedSensorFromServer;
-
-          return newFilteredSensors;
         });
 
         setEditingSensor(null);

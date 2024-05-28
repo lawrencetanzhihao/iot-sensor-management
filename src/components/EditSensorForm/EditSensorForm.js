@@ -53,6 +53,7 @@ const EditSensorForm = ({
           </label>
           <input
             type="number"
+            step="0.000001"
             id="latitude"
             name="latitude"
             value={editingSensor?.latitude || ""}
@@ -67,6 +68,7 @@ const EditSensorForm = ({
           </label>
           <input
             type="number"
+            step="0.000001"
             id="longitude"
             name="longitude"
             value={editingSensor?.longitude || ""}

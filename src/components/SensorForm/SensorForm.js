@@ -49,6 +49,7 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
         </label>
         <input
           type="number"
+          step="0.000001"
           id="latitude"
           name="latitude"
           value={newSensor.latitude}
@@ -63,6 +64,7 @@ const SensorForm = ({ newSensor, handleInputChange, handleAddSensor }) => {
         </label>
         <input
           type="number"
+          step="0.000001"
           id="longitude"
           name="longitude"
           value={newSensor.longitude}
